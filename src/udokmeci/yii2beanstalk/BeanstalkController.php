@@ -152,12 +152,11 @@ class BeanstalkController extends Controller
     public function decayJob($job)
     {
         $jobStats = $this->beanstalk->statsJob($job);
-        $delay_job = $jobStats->releases + $jobStats->delay + static::DELAY_TIME;
         if ($jobStats->releases >= static::DELAY_MAX) {
             $this->beanstalk->delete($job);
             $this->stderr(Yii::t('udokmeci.beanstalkd', 'Decaying Job Deleted!') . "\n", Console::FG_RED);
         } else {
-            $this->beanstalk->release($job, static::DELAY_PRIORITY, $delay_job);
+            $this->beanstalk->release($job, static::DELAY_PRIORITY, static::DELAY_TIME);
         }
     }
 
